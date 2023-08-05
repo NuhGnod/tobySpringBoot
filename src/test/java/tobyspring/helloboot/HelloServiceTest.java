@@ -22,9 +22,20 @@ import java.lang.annotation.Target;
 
 }
 public class HelloServiceTest {
+
     @FastUnitTest
     void simpleHelloService() {
-        SimpleHelloService simpleHelloService = new SimpleHelloService();
+        SimpleHelloService simpleHelloService = new SimpleHelloService(new HelloRepository() {
+            @Override
+            public Hello findHello(String name) {
+                return null;
+            }
+
+            @Override
+            public void increaseCount(String name) {
+
+            }
+        });
         String test = simpleHelloService.sayHello("Test");
         Assertions.assertThat(test).isEqualTo("HelloTest");
     }
