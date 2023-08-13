@@ -27,21 +27,29 @@ public class HellobootApplication {
 
     public static void main(String[] args) {
 //		SpringApplication.run(HellobootApplication.class, args);
-        GenericWebApplicationContext container = new GenericWebApplicationContext();
+        // spring container 생성 후 Bean 초기화
+        GenericWebApplicationContext container = new GenericWebApplicationContext() {
+            @Override
+            protected void onRefresh() {
+                super.onRefresh();
+                ServletWebServerFactory factory = new TomcatServletWebServerFactory(); // 어떤 servletContainer를 동작시킬 수 있으니,
+
+                WebServer webServer = factory.getWebServer(servletContext -> {
+                    servletContext.addServlet("dispatcherServlet", new DispatcherServlet(this))
+                            .addMapping("/*");
+                });
+
+                webServer.start();
+
+            }
+        };
         container.registerBean(HelloController.class);
         container.registerBean(SimpleHelloService.class);
         container.refresh();
 
-        ServletWebServerFactory factory = new TomcatServletWebServerFactory(); // 어떤 servletContainer를 동작시킬 수 있으니,
         // 추상화.
 
-        WebServer webServer = factory.getWebServer(servletContext -> {
-            servletContext.addServlet("dispatcherServlet", new DispatcherServlet(container))
-                    .addMapping("/*");
-        });
-
-        webServer.start();
-
+        // DispatcherServlet 초기화.
     }
 
 }

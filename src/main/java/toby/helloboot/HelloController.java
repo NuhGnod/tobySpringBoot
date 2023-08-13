@@ -1,21 +1,23 @@
 package toby.helloboot;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-@RestController
+
+@RequestMapping("/hello")
+//@RestController
 public class HelloController {
 
-     private final HelloService helloService;
+    private final HelloService helloService;
 
     public HelloController(HelloService helloService) {
         this.helloService = helloService;
     }
 
-    @GetMapping("/hello")
+    @GetMapping
+    @ResponseBody
     public String hello(String name) {
         Objects.requireNonNull(name);
         return helloService.say(name);
