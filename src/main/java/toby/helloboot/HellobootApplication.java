@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,7 +27,7 @@ public class HellobootApplication {
 
     public static void main(String[] args) {
 //		SpringApplication.run(HellobootApplication.class, args);
-        GenericApplicationContext container = new GenericApplicationContext();
+        GenericWebApplicationContext container = new GenericWebApplicationContext();
         container.registerBean(HelloController.class);
         container.registerBean(SimpleHelloService.class);
         container.refresh();
@@ -34,29 +36,10 @@ public class HellobootApplication {
         // 추상화.
 
         WebServer webServer = factory.getWebServer(servletContext -> {
-
-            servletContext.addServlet("frontController", new HttpServlet() {
-                        @Override
-                        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-                            if (req.getRequestURI().equals("/hello")
-                                    && req.getMethod().equals(HttpMethod.GET.name())) {
-                                String name = req.getParameter("name");
-
-                                HelloController helloController = container.getBean(HelloController.class);
-
-
-                                String ret = helloController.hello(name);
-                                resp.setStatus(HttpStatus.OK.value());
-                                resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                                resp.getWriter().println("frontController servlet : " + ret);
-                            } else {
-                                resp.setStatus(HttpStatus.NOT_FOUND.value());
-
-                            }
-                        }
-                    })
+            servletContext.addServlet("dispatcherServlet", new DispatcherServlet(container))
                     .addMapping("/*");
         });
+
         webServer.start();
 
     }
