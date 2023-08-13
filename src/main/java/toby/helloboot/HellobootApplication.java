@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -24,20 +25,25 @@ public class HellobootApplication {
 
     public static void main(String[] args) {
 //		SpringApplication.run(HellobootApplication.class, args);
+        GenericApplicationContext container = new GenericApplicationContext();
+        container.registerBean(HelloController.class);
+        container.refresh();
 
         ServletWebServerFactory factory = new TomcatServletWebServerFactory(); // 어떤 servletContainer를 동작시킬 수 있으니,
         // 추상화.
 
         WebServer webServer = factory.getWebServer(servletContext -> {
-            HelloController helloController = new HelloController();
 
             servletContext.addServlet("frontController", new HttpServlet() {
                         @Override
                         protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
                             if (req.getRequestURI().equals("/hello")
                                     && req.getMethod().equals(HttpMethod.GET.name())) {
-
                                 String name = req.getParameter("name");
+
+                                HelloController helloController = container.getBean(HelloController.class);
+
+
                                 String ret = helloController.hello(name);
                                 resp.setStatus(HttpStatus.OK.value());
                                 resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
