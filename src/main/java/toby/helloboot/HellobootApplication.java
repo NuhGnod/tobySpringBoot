@@ -27,6 +27,7 @@ public class HellobootApplication {
 //		SpringApplication.run(HellobootApplication.class, args);
         GenericApplicationContext container = new GenericApplicationContext();
         container.registerBean(HelloController.class);
+        container.registerBean(SimpleHelloService.class);
         container.refresh();
 
         ServletWebServerFactory factory = new TomcatServletWebServerFactory(); // 어떤 servletContainer를 동작시킬 수 있으니,
@@ -47,7 +48,7 @@ public class HellobootApplication {
                                 String ret = helloController.hello(name);
                                 resp.setStatus(HttpStatus.OK.value());
                                 resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                                resp.getWriter().println("simpleServlet name : " + ret);
+                                resp.getWriter().println("frontController servlet : " + ret);
                             } else {
                                 resp.setStatus(HttpStatus.NOT_FOUND.value());
 
