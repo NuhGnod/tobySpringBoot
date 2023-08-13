@@ -29,6 +29,8 @@ public class HellobootApplication {
         // 추상화.
 
         WebServer webServer = factory.getWebServer(servletContext -> {
+            HelloController helloController = new HelloController();
+
             servletContext.addServlet("frontController", new HttpServlet() {
                         @Override
                         protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,9 +38,10 @@ public class HellobootApplication {
                                     && req.getMethod().equals(HttpMethod.GET.name())) {
 
                                 String name = req.getParameter("name");
+                                String ret = helloController.hello(name);
                                 resp.setStatus(HttpStatus.OK.value());
                                 resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                                resp.getWriter().println("simpleServlet name : " + name);
+                                resp.getWriter().println("simpleServlet name : " + ret);
                             } else {
                                 resp.setStatus(HttpStatus.NOT_FOUND.value());
 
