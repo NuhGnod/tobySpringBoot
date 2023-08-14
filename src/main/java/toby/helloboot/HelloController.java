@@ -14,18 +14,15 @@ import java.util.Objects;
 public class HelloController implements ApplicationContextAware {
 
     private final HelloService helloService;
-    private final ApplicationContext applicationContext;
-    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
+    public HelloController(HelloService helloService) {
         this.helloService = helloService;
-        this.applicationContext = applicationContext;
-
-        System.out.println("applicationContext = " + applicationContext);
     }
 
     @GetMapping
     @ResponseBody
     public String hello(String name) {
-        Objects.requireNonNull(name);
+        if(name == null  || name.length()== 0) throw new IllegalArgumentException();
+//        Objects.requireNonNull(name);
         return helloService.say(name);
     }
 

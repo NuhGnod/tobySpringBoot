@@ -44,9 +44,8 @@ public class HellobootApplication {
 
 
     public static void main(String[] args) {
-//		SpringApplication.run(HellobootApplication.class, args);
+		SpringApplication.run(HellobootApplication.class, args);
         // spring container 생성 후 Bean 초기화
-        MySpringApplication.run(HellobootApplication.class, args);
 
         // 추상화.
 
