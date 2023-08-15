@@ -1,3 +1,5 @@
 toby.helloboot.config.autoconfig.DispatcherServletConfig
-toby.helloboot.config.autoconfig.TomcatWebServerConfig
+toby.helloboot.config.autoconfig.PropertyPostProcessorConfig
+toby.helloboot.config.autoconfig.PropertyWebServerConfig
+toby.helloboot.config.TomcatWebServerConfig
 toby.helloboot.config.autoconfig.JettyWebServerConfig
