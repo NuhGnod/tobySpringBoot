@@ -1,2 +1,3 @@
 toby.helloboot.config.autoconfig.DispatcherServletConfig
 toby.helloboot.config.autoconfig.TomcatWebServerConfig
+toby.helloboot.config.autoconfig.JettyWebServerConfig
